@@ -1,0 +1,96 @@
+/*
+ * FDC Application example package style sheet
+ * Written by Andrew Aitken, Andrew Black, and Jason Lybbert
+ * 2014
+ */
+
+/* This is required to enable horizontal scrolling in jQuery mobile */
+#alpacaLayout {
+    overflow: auto;
+}
+
+.header {
+    font-size: 16px;
+    font-weight: bold;
+    vertical-align: top;
+}
+
+.nfiPageNumber {
+    font-size: 42px;
+    font-weight: bold;
+    vertical-align: top;
+    background-color: lightgray;
+    border: black 4px solid;
+}
+
+.noborder td {
+    border: none;
+    vertical-align: top;
+    text-align: center;
+    padding: 5px;
+    overflow: visible;
+    vertical-align: bottom;
+}
+
+.nfiTable table
+{
+    border-collapse:collapse;
+}
+.nfiTable th {
+    background-color: lightgrey;
+    font-weight: normal;
+}
+.subheader {
+    height:9em;
+}
+.nfiTable tr, th {
+    border: 1px solid black;
+    vertical-align: top;
+    text-align: center;
+    padding: 5px;
+    overflow: visible;
+    vertical-align: bottom;
+}
+
+.nfiTable td {
+    border: 1px solid black;
+    vertical-align: top;
+    text-align: center;
+    padding: 5px;
+    overflow: visible;
+    vertical-align: bottom;
+}
+
+.rotate {
+    -webkit-transform:rotate(-90deg);
+    white-space: nowrap;
+    text-align: center;
+
+    width:20px;
+
+}
+
+.singleLetterDropdown {
+    min-width: 1em;
+}
+
+/* Override the bootstrap form control */
+.form-control {
+    width: auto;
+}
+
+/* Override the Alpaca default dropdown menu width */
+select {
+    -webkit-appearance: listbox;
+    min-width: 3em;
+}
+
+/* Remove the extra spacing created by the Alpaca helper area (not used) */
+.alpaca-controlfield-helper {
+    margin: 0;
+}
+
+/* Add some extra thickness to left side of field cells */
+.fieldCell1_14, .fieldCell1_18, .fieldCell1_20, .fieldCell1_23 {
+    border-left-width: 2px !important;
+}

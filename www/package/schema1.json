@@ -1,0 +1,207 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Large Tree Plot - Tree Information",
+    "description": "Tally Sheet #10 of the Ground Pot data Collection Tally Sheet",
+    "type": "object",
+    "properties": {
+        "tree_details_plotSector": {
+            "type": "integer",
+            "enum": [" ", 1, 2, 3, 4, 5, 6, 7, 8],
+            "default": " ",
+            "disallow": [" "],
+            "required": true
+        },
+        "tree_details_treeNumber": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9999,
+            "required": true
+        },
+        "tree_details_origPlotArea": {
+            "type": "string",
+            "maxLength": 1,
+            "enum": [" ", "Y", "N", "X", "U"],
+            "default": " ",
+            "disallow": [" "],
+            "required": true
+        },
+        "tree_details_genus": {
+            "type": "string",
+            "maxLength": 4,
+            "minLength": 4,
+            "required": true
+        },
+        "tree_details_species": {
+            "type": "string",
+            "maxLength": 3,
+            "minLength": 3,
+            "required": true
+        },
+        "tree_details_variety": {
+            "type": "string",
+            "maxLength": 3,
+            "minLength": 3
+        },
+        "tree_details_treeStatus": {
+            "type": "string",
+            "maxLength": 2,
+            "enum": [" ", "LS", "LF", "DS"],
+            "default": " ",
+            "disallow": [" "],
+            "required": true
+        },
+        "tree_details_dbh": {
+            "type": "number",
+            "exclusiveMinimum": true,
+            "minimum": 0.0,
+            "required": true
+        },
+        "tree_details_dbhME": {
+            "type": "string",
+            "maxLength": 1,
+            "enum": [" ", "M", "E"],
+            "default": " ",
+            "disallow": [" "],
+            "required": true
+        },
+        "tree_details_treeHeight": {
+            "type": "number",
+            "minimum": 1.3,
+            "maximum": 99.9,
+            "required": true
+        },
+        "tree_details_treeHeightME": {
+            "type": "string",
+            "maxLength": 1,
+            "enum": [" ", "M", "E"],
+            "default": " ",
+            "disallow": [" "],
+            "required": true
+        },
+        "tree_details_crownClass": {
+            "type": "string",
+            "maxLength": 1,
+            "enum": [" ", "D", "C", "I", "S", "V", "N"],
+            "default": " ",
+            "disallow": [" "],
+            "required": true
+        },
+        "tree_details_heightToLiveCrownBase": {
+            "type": "number",
+            "required": true
+        },
+        "tree_details_heightToLiveCrownTop": {
+            "type": "number",
+            "required": true
+        },
+        "tree_condition_stem": {
+            "type": "string",
+            "maxLength": 1,
+            "enum": [" ", "B", "I"],
+            "default": " ",
+            "disallow": [" "],
+            "required": true
+        },
+        "tree_condition_crown": {
+            "type": "integer",
+            "enum": [" ", 1, 2, 3, 4, 5, 6],
+            "default": " ",
+            "disallow": [" "],
+            "required": true
+        },
+        "tree_condition_bark": {
+            "type": "integer",
+            "enum": [" ", 1, 2, 3, 4, 5, 6, 7],
+            "default": " ",
+            "disallow": [" "],
+            "required": true
+        },
+        "tree_condition_wood": {
+            "type": "integer",
+            "enum": [" ", 1, 2, 3, 4, 5, 6, 7, 8],
+            "default": " ",
+            "disallow": [" "],
+            "required": true
+        },
+        "tree_stemMapping_azimuthToTree": {
+            "type": "integer",
+            "minimum": -1,
+            "maximum": 360,
+            "required": true
+        },
+        "tree_stemMapping_distanceToTreeFace": {
+            "type": "number",
+            "required": true
+        },
+        "tree_damageAgents_damageAgent1": {
+            "type": "string",
+            "maxLength": 2,
+            "enum": [" ", "A", "AB", "AC", "AD",
+                "AE", "AH", "AM", "AP",
+                "AS", "AV", "AX", "AZ",
+                "D", "DB", "DD", "DF",
+                "DL", "DM", "DR", "DS",
+                "I", "IA", "IB", "ID",
+                "IS", "IW", "N", "NB",
+                "ND", "NF", "NG", "NH",
+                "NK", "NL", "NN", "NR",
+                "NS", "NW", "NX", "NY",
+                "NZ", "T", "TC", "TL",
+                "TP", "TM", "TR", "TT",
+                "M", "VH", "VP", "VS",
+                "VT", "U", "O"],
+            "default": " ",
+            "disallow": [" "],
+            "required": true
+        },
+        "tree_damageAgents_location1": {
+            "type": "integer",
+            "enum": [ -1, 0, 1, 2, 3, 4, 5, 6, 7],
+            "default": -1,
+            "required": true
+        },
+        "tree_damageAgents_severity1": {
+            "type": "string",
+            "maxLength": 1,
+            "enum": [" ", "L", "M", "H", "C", "U", "N"],
+            "default": " ",
+            "disallow": [" "],
+            "required": true
+        },
+        "tree_damageAgents_damageAgent2": {
+            "type": "string",
+            "maxLength": 2,
+            "enum": [" ", "A", "AB", "AC", "AD",
+                "AE", "AH", "AM", "AP",
+                "AS", "AV", "AX", "AZ",
+                "D", "DB", "DD", "DF",
+                "DL", "DM", "DR", "DS",
+                "I", "IA", "IB", "ID",
+                "IS", "IW", "N", "NB",
+                "ND", "NF", "NG", "NH",
+                "NK", "NL", "NN", "NR",
+                "NS", "NW", "NX", "NY",
+                "NZ", "T", "TC", "TL",
+                "TP", "TM", "TR", "TT",
+                "M", "VH", "VP", "VS",
+                "VT", "U", "O"],
+            "default": " ",
+            "disallow": [" "],
+            "required": true
+        },
+        "tree_damageAgents_location2": {
+            "type": "integer",
+            "enum": [ -1, 0, 1, 2, 3, 4, 5, 6, 7],
+            "default": -1,
+            "required": true
+        },
+        "tree_damageAgents_severity2": {
+            "type": "string",
+            "maxLength": 1,
+            "enum": [" ", "L", "M", "H", "C", "U", "N"],
+            "default": " ",
+            "disallow": [" "],
+            "required": true
+        }
+    }
+}

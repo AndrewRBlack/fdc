@@ -1,0 +1,51 @@
+{
+    "header_dataID_networkLabel": {
+        "title": "Network Label",
+        "msg1": "Error: Must be an integer between 1 and 1600000 or greater than 2000000"
+    },
+    "header_date_year": {
+        "title": "YYYY",
+        "msg1": "Error: Year must be a 4-digit number at least 1992."
+    },
+    "header_date_month": {
+        "title": "MON",
+        "msg1": "Error: Must be an integer between 1 and 12."
+    },
+    "header_date_day": {
+        "title": "DD",
+        "msg1": "Error: Must be an integer between 1 and 31, depending on Month.",
+        "msg2": "Error: Value of month indicates this value must be at most 30.",
+        "msg3": "Error: Value of month and year indicates this value must be at most 29.",
+        "msg4": "Error: Value of month and year indicates this value must be at most 28."
+    },
+    "header_date_measureNumber": {
+        "title": "Measure Number",
+        "msg1": "Error: Must be an integer between 0 and 999."
+    },
+    "header_crewInitials1": {
+        "title": "Person 1",
+        "msg1": "Error: Value cannot exceed three characters."
+    },
+    "header_crewInitials2": {
+        "title": "Person 2",
+        "msg1": "Error: Value cannot exceed three characters."
+    },
+    "header_crewInitials3": {
+        "title": "Person 3",
+        "msg1": "Error: Value cannot exceed three characters."
+    },
+    "header_plotType": {
+        "title": "Plot Type",
+        "msg1": "Error: Must be one of: LTC, LTS"
+    },
+    "header_nominalPlotSize": {
+        "title": "Nominal Plot Size (ha)",
+        "msg1": "Error: Must be a number between 0.03 and 0.1",
+        "msg2": "Warning: Ensure plot size should not be 0.04 ha."
+    },
+    "header_measuredPlotSize": {
+        "title": "Measured Plot Size (ha)",
+        "msg1": "Error: Muyst be a number between 0.0075 and 0.1",
+        "msg2": "Warning: Ensure plot size should not be 0.04 ha."
+    }
+}

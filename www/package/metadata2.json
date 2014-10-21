@@ -1,0 +1,12 @@
+{
+    "removed_treeNumber": {
+        "title": "Tree Number",
+        "msg1": "Error: Must be an integer between 1 and 9999",
+        "msg2": "Error: Tree number cannot match a tree number in the Tree table",
+        "msg3": "Error: The tree number was not found in the historical data."
+    },
+    "removed_reason": {
+        "title": "Reason",
+        "msg1": "Error: Must be one of:  C, B, F, U, O, N"
+    }
+}

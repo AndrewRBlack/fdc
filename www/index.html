@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<!--
+/*
+ * FDC Application example primary file
+ * Written by Andrew Aitken, Andrew Black, and Jason Lybbert
+ * 2014
+ */
+-->
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+
+        <!-- Begin API imports -->
+        <script src="lib/jquery-2.1.1.js" type="text/javascript"></script>
+        <script src="lib/jquery.tmpl.js" type="text/javascript"></script>
+
+        <link href="lib/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css"/>
+        <link href="lib/bootstrap/css/bootstrap-theme.css" rel="stylesheet" type="text/css"/>
+        <script src="lib/bootstrap/js/bootstrap.js" type="text/javascript"></script>
+
+        <script src="lib/alpaca/alpaca.js" type="text/javascript"></script>
+        <link href="lib/alpaca/alpaca.css" rel="stylesheet" type="text/css"/>
+        <link href="lib/alpaca/alpaca-bootstrap.css" rel="stylesheet" type="text/css"/>
+
+        <script src="lib/jquery_mobile/jquery.mobile-1.4.2.js" type="text/javascript"></script>
+        <link href="lib/jquery_mobile/jquery.mobile-1.4.2.css" rel="stylesheet" type="text/css"/>
+
+        <script src="lib/jszip/jszip.js" type="text/javascript"></script>
+        <!-- End API imports -->
+
+        <title>Field Data Collection | Home</title>
+
+        <script type="text/javascript">
+
+            // WriteToJson is the file pointer to the saved data document on the mobile devise
+            var writeToJson = null;
+
+            // Use Cordova FileSystem functionality to initialize the file pointer
+            document.addEventListener("deviceready", onDeviceReady, false);
+            // Cordova uses events and callback functions for its API calls
+            function onDeviceReady() {
+                window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
+            }
+            function gotFS(fileSystem) {
+                fileSystem.root.getFile("data.json", {create: true, exclusive: false}, gotFileEntry, fail);
+            }
+            function gotFileEntry(fileEntry) {
+                fileEntry.createWriter(gotFileWriter, fail);
+            }
+            function gotFileWriter(writer) {
+                writeToJson = writer;
+            }
+            function fail(error) {
+                // todo, write error handling for saved data file
+            }
+
+            /*
+             * Allow the dynamic changing of the page title through this function
+             */
+            function changeTitle(newTitle) {
+                $('title').html(newTitle);
+            }
+
+            // Begin building the JQuery UI menu
+            $(function() {
+                $("[data-role='navbar']").navbar();
+                $("[data-role='header'], [data-role='footer']").toolbar();
+            });
+            $(document).on("pagecreate", function() {
+                $("body > [data-role='panel']").panel();
+                $("body > [data-role='panel'] [data-role='listview']").listview();
+            });
+            // Update the contents of the toolbars
+            $(document).on("pageshow", "[data-role='page']", function() {
+                // Each of the four pages in this demo has a data-title attribute
+                // which value is equal to the text of the nav button
+                // For example, on first page: <div data-role="page" data-title="Info">
+                var current = $(this).jqmData("title");
+                // Change the heading
+                $("[data-role='header'] h1").text(current);
+                // Remove active class from nav buttons
+                $("[data-role='navbar'] a.ui-btn-active").removeClass("ui-btn-active");
+                // Add active class to current nav button
+                $("[data-role='navbar'] a").each(function() {
+                    if ($(this).text() === current) {
+                        $(this).addClass("ui-btn-active");
+                    }
+                });
+            });
+
+            //closes the panel when popup is loaded
+            $(document).on('click', '#importPackage', function() {
+                $('#inside-a').panel('close');
+                //        $('#navigation').popup('close');
+            });
+
+        </script>
+
+        <!-- Instantiate the popup on DOMReady, and enhance its contents -->
+        <script id="popup-outside-page-script">
+            $(function() {
+                $("#popupLogin").enhanceWithin().popup();
+            });
+        </script>
+
+    </head>
+    <body>
+        <div data-role="popup" id="popupLogin" data-display="overlay" data-theme="a" class="ui-corner-all" >
+            <div style="padding:10px 20px;">
+                <h3>Import a package</h3>
+                <label for="packageFile">File:</label>
+                <input type="file" name="file" id="packageFile">
+                <div style="display: inline; " class="ui-content ">
+                            <a href="#" class="ui-btn ui-corner-all ui-shadow  ui-btn-inline ui-btn-b" data-rel="back">Cancel</a>
+                            <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" data-rel="back" onClick="readImportFile()">Load</a>
+                </div>
+            </div>
+        </div><!-- /popup -->
+
+        <!-- header -->
+        <div data-role="header" id="header" data-position="fixed" data-tap-toggle="false" data-theme="a">
+
+            <a href="#inside-a" class="ui-btn ui-android-2x-fixed ui-corner-all ui-btn-left ui-icon-bars ui-btn-icon-notext ui-btn-b ui-nodisc-icon">Open right panel</a>
+            <h1>FDC</h1>
+
+            <!-- navbar -->
+            <div data-role="navbar">
+
+                <ul> 
+                    <li><div class="ui-input-btn ui-btn ui-corner-all ui-shadow">
+                            Save
+                            <input id="saveButton" data-role="button" data-enhanced="true"/></div></li>
+
+                    <li><div class="ui-input-btn ui-btn ui-corner-all ui-shadow">
+                            Validate
+                            <input data-role="button" id="validateButton" data-enhanced="true"/></div></li>
+                </ul>
+            </div>
+            <!-- /navbar -->
+        </div><!-- /header -->
+
+        <!-- footer -->
+        <div data-role="footer" data-position="fixed" data-tap-toggle="false" data-theme="a" >      
+
+            <a id="messageArea" class="alert alert-warning" style="min-height: 0px; width: 100%;"></a>   
+
+        </div>
+        <!-- /footer -->
+
+        <!-- panel on the left -->
+        <div data-role="panel" id="inside-a" data-position="left" data-display="push" data-theme="a">
+            <ul data-role="listview" id="leftMenuPanel">
+                <li data-icon="back"><a href="#" data-rel="close">Close</a></li>
+                <li><a href="#pageone" class="ui-btn">Home Page</a></li>
+            </ul>
+        </div>
+        <!-- /panel -->
+
+        <!-- Define the internal JQuery UI pages. Append to internalPages to add new pages -->
+        <div id="internalPages">
+
+            <div data-role="page" id="pageone" >
+                <div data-role="main" class="ui-content">
+                    <div style="text-align: center">
+                        <img src="img/tree.png" alt="Digital Form" style="alignment-baseline: middle; width: 100px; height: 100px;"/>
+
+                        <div class="ui-corner-all custom-corners">
+                            <div class="ui-bar ui-bar-a">
+
+                                <h2>Welcome to the Field Data Collection Application</h2>
+                            </div>
+                            <div class="ui-body ui-body-a">
+                                <p>            
+
+                                    <!-- productioncode -->
+                                    <!--                                    <a href="#popupLogin" id="importPackage" data-rel="popup" data-position-to="window" class="ui-btn ui-corner-all
+                                                                                      ui-shadow ui-btn-inline ui-icon-check ui-btn-icon-left ui-btn-a" data-transition="pop">
+                                                                            Import a Package</a>-->
+                                    <!-- !productioncode -->
+
+                                    <!-- testcode -->
+                                    <!-- Replace with above production code for final version. This HTML directly loads the sample package without the need for the imported ZIP file  -->
+                                    <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-check ui-btn-icon-left ui-btn-a" onclick="loadTestPackage()">
+                                        Load Test Package</a>
+                                    <!-- !testcode -->
+
+                                    <a href="#popupLoadSaved" id="savePopupLink" data-rel="popup" data-position-to="window" class="ui-btn ui-corner-all
+                                       ui-shadow ui-btn-inline ui-icon-edit ui-btn-icon-left ui-btn-a" data-transition="pop">
+                                        Load Saved Data</a></p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div data-role="popup" id="popupLoadSaved" data-display="overlay" data-theme="a" class="ui-corner-all" >
+                        <div style="padding:10px 20px;">
+                            <h3>Load Saved Data</h3>
+                            <label for="savedFile">File:</label>
+                            <input type="file" name="file" id="savedFile">
+                            <div style="display: inline; " class="ui-content ">
+                                        <a href="#" class="ui-btn ui-corner-all ui-shadow  ui-btn-inline ui-btn-b" data-rel="back">Cancel</a>
+                                        <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" data-rel="back" onClick="readSavedFile()">Load</a>
+                            </div>
+                        </div>
+                    </div><!-- /popup -->
+                </div>  <!-- /content -->
+            </div> <!-- /pageone -->
+
+        </div>
+
+        <!-- Form loading logic -->
+        <script>
+
+            // Turning off async functionality ensures that JQery calls complete before program continues
+            $.ajaxSetup({
+                async: false
+            });
+
+            // Initialize the variables that will hold the package file contents
+            var importedJson = null;
+            var layoutFile = "";
+            var packageFile = "";
+            var metadataFile0 = "";
+            var metadataFile1 = "";
+            var metadataFile2 = "";
+            var metadataFile3 = "";
+            var schemaFile0 = "";
+            var schemaFile1 = "";
+            var schemaFile2 = "";
+            var schemaFile3 = "";
+            var helpFile = "";
+            var styleFile = "";
+
+            /*
+             * Attempt to read the contents of the selected JSON data file
+             * Called via the saved data import submit button
+             */
+            function readSavedFile() {
+
+                var reader = new FileReader();
+                reader.onload = (function(e) {
+
+                    importedJson = e.target.result;
+                });
+                // Open file
+                reader.readAsBinaryString(document.getElementById('savedFile').files[0]);
+            }
+
+            /*
+             * testcode
+             * Load the contents of the package folder so that they may be viewed 
+             * on the sidebar. This is a test function to be used in place of importing a ZIP file via readImportFile()
+             */
+            function loadTestPackage() {
+                jQuery(document).ready(function() {
+
+                    $.get("package/layout.html", function(data) {
+                        layoutFile = data;
+                    }, "text");
+
+                    $.get("package/package.js", function(data) {
+                        packageFile = data;
+                    }, "text");
+
+                    $.get("package/metadata0.json", function(data) {
+                        metadataFile0 = data;
+                    }, "text");
+
+                    $.get("package/metadata1.json", function(data) {
+                        metadataFile1 = data;
+                    }, "text");
+
+                    $.get("package/metadata2.json", function(data) {
+                        metadataFile2 = data;
+                    }, "text");
+
+                    $.get("package/metadata3.json", function(data) {
+                        metadataFile3 = data;
+                    }, "text");
+
+                    $.get("package/schema0.json", function(data) {
+                        schemaFile0 = data;
+                    }, "text");
+
+                    $.get("package/schema1.json", function(data) {
+                        schemaFile1 = data;
+                    }, "text");
+
+                    $.get("package/schema2.json", function(data) {
+                        schemaFile2 = data;
+                    }, "text");
+
+                    $.get("package/schema3.json", function(data) {
+                        schemaFile3 = data;
+                    }, "text");
+
+                    $.get("package/help.html", function(data) {
+                        helpFile = data;
+                    }, "text");
+
+                    $.get("package/style.css", function(data) {
+                        styleFile = data;
+                    }, "text");
+                });
+
+                eval(packageFile);
+
+            }
+
+            /*
+             * Attempt to read, store, and execute the contents of the selected form package
+             * Called via the package import submit button
+             */
+            function readImportFile() {
+
+                // Use the JSZip API to open the zip package
+                var reader = new FileReader();
+
+                // Process the zip package once the file is loaded
+                reader.onload = (function(e) {
+                    var zipFile = e.target.result;
+                    var zip = new JSZip();
+                    zip.load(zipFile, {base64: false});
+
+                    // Run a check for each item in the zip file
+                    $.each(zip.files, function(index, zipEntry) {
+                        // Store the file contents for each known file
+                        switch (zipEntry.name) {
+                            case ("layout.html"):
+                                layoutFile = zipEntry.asBinary();
+                                break;
+                            case ("package.js"):
+                                packageFile = zipEntry.asBinary();
+                                break;
+                            case ("metadata0.json"):
+                                metadataFile0 = zipEntry.asBinary();
+                                break;
+                            case ("metadata1.json"):
+                                metadataFile1 = zipEntry.asBinary();
+                                break;
+                            case ("metadata2.json"):
+                                metadataFile2 = zipEntry.asBinary();
+                                break;
+                            case ("metadata3.json"):
+                                metadataFile3 = zipEntry.asBinary();
+                                break;
+                            case ("schema0.json"):
+                                schemaFile0 = zipEntry.asBinary();
+                                break;
+                            case ("schema1.json"):
+                                schemaFile1 = zipEntry.asBinary();
+                                break;
+                            case ("schema2.json"):
+                                schemaFile2 = zipEntry.asBinary();
+                                break;
+                            case ("schema3.json"):
+                                schemaFile3 = zipEntry.asBinary();
+                                break;
+                            case ("help.html"):
+                                helpFile = zipEntry.asBinary();
+                                break;
+                            case ("style.css"):
+                                styleFile = zipEntry.asBinary();
+                                break;
+                            default:
+                                break;
+                        }
+                    });
+
+                    // Execute the actual JavaScript code for the package
+                    eval(packageFile);
+
+                });
+                // Open file, call the onload function above
+                reader.readAsBinaryString(document.getElementById('packageFile').files[0]);
+            }
+        </script>
+
+        <script type="text/javascript" src="cordova.js"></script>
+    </body>
+</html>

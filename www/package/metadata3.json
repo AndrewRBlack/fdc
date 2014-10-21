@@ -1,0 +1,11 @@
+{
+    "comments_treeNumber": {
+        "title": "Tree Number",
+        "msg1": "Error: Must be a integer between 1 and 9999",
+        "msg2": "Warning: Tree number was not found in either the Trees table or the Removed Trees table."
+    },
+    "comments_comments": {
+        "title": "Comments",
+        "msg1": "Error: This field cannot be left blank." 
+    }
+}

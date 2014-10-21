@@ -1,0 +1,18 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Comments Table",
+    "description": "Comments table for the Ground Pot Data Collection Tally Sheet #10",
+    "type": "object",
+    "properties": {
+        "comments_treeNumber": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 9999,
+            "required": true
+        },
+        "comments_comments": {
+            "type": "string",
+            "required": true
+        }
+    }
+}
